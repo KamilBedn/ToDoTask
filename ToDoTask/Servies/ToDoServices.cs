@@ -13,17 +13,25 @@ namespace ToDoTask.Servies
     {
         private readonly ToDoTaskDbContext _context;
         private readonly ILogger<ToDoServices> _logger;
+        private string[] incomingToDo = new string[] {"today", "next day","current week"};
 
         public ToDoServices(ToDoTaskDbContext context, ILogger<ToDoServices> logger)
         {
             _context = context;
             _logger = logger;
         }
-        public ToDo GetById(int id)
+
+        private ToDo GetToDoTask(int id)
         {
-            var toDo = _context
+            ToDo result = _context
                 .ToDos
                 .FirstOrDefault(t => t.Id == id);
+            return result;
+        }
+
+        public ToDo GetById(int id)
+        {
+            ToDo toDo = GetToDoTask(id);
             if (toDo is null) 
                 throw new NotFoundException("ToDo not found");
 
@@ -32,28 +40,46 @@ namespace ToDoTask.Servies
 
         public IEnumerable<ToDo> GetAll()
         {
-            var toDo = _context
+            IEnumerable<ToDo> toDo = _context
                 .ToDos
                 .ToList();
 
             return (toDo);
         }
 
-        public IEnumerable<ToDo> GetIncomingDays(int Days)
+        public IEnumerable<ToDo> GetIncomingDays(string query)
         {
-            var toDo = _context
-                .ToDos
-                .Where(t => t.DateAndTimeOfExiry < DateTime.Now.AddDays(Days))
-                .ToList();
-            if (toDo is null)
-                throw new NotFoundException("ToDo not found");
+            if(query.ToLower() == "today")
+            {
+                IEnumerable<ToDo> result = _context.ToDos
+                    .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(1))
+                    .ToList();
+                return result;
+            }
+            else if(query.ToLower() == "next day")
+            {
+                IEnumerable<ToDo> result = _context.ToDos
+                    .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(2))
+                    .ToList();
+                return result;
+            }
+            else if(query.ToLower() == "current week")
+            {
+                IEnumerable<ToDo> result = _context.ToDos
+                    .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(7))
+                    .ToList();
+                return result;
+            }
+            else
+            {
+                throw new BadRequestExcepion($"You can show incoming ToDo for {string.Join(",", incomingToDo)}");
+            }
 
-            return (toDo);
         }
 
         public int CreateToDo(ToDo toDo)
         {
-            var result = new ToDo()
+            ToDo result = new ToDo()
             {
                 DateAndTimeOfExiry = toDo.DateAndTimeOfExiry,
                 Title = toDo.Title,
@@ -68,9 +94,7 @@ namespace ToDoTask.Servies
 
         public void Uptade(ToDo toDo, int id)
         {
-            var result = _context
-                .ToDos
-                .FirstOrDefault(t => t.Id == id);
+            ToDo result = GetToDoTask(id);
             if (toDo is null)
                 throw new NotFoundException("ToDo not found");
             result.Title = toDo.Title;
@@ -80,9 +104,7 @@ namespace ToDoTask.Servies
 
         public void SetPercentComplete(int percentComplete, int id)
         {
-            var toDo = _context
-                .ToDos
-                .FirstOrDefault(t => t.Id == id);
+            ToDo toDo = GetToDoTask(id);
             if (toDo is null)
                 throw new NotFoundException("ToDo not found");
             toDo.PercentComplete += percentComplete;
@@ -93,9 +115,7 @@ namespace ToDoTask.Servies
         {
             _logger.LogError($"ToDo with id: {id} DELETE action invoked");
 
-            var toDo = _context
-                .ToDos
-                .FirstOrDefault(t => t.Id == id);
+            ToDo toDo = GetToDoTask(id);
             if (toDo is null)
                 throw new NotFoundException("ToDo not found");
             _context.ToDos.Remove(toDo);
@@ -104,9 +124,7 @@ namespace ToDoTask.Servies
         
         public void MarkDoneToDo(int id)
         {
-            var toDo = _context
-                .ToDos
-                .FirstOrDefault(t => t.Id == id);
+            ToDo toDo = GetToDoTask(id);
             if (toDo is null)
                 throw new NotFoundException("ToDo not found");
             if (toDo.PercentComplete != 100)

@@ -11,7 +11,7 @@ namespace ToDoTask.Servies
     {
         ToDo GetById(int id);
         IEnumerable<ToDo> GetAll();
-        IEnumerable<ToDo> GetIncomingDays(int incomingDays);
+        IEnumerable<ToDo> GetIncomingDays(string query);
         int CreateToDo(ToDo toDo);
         void Uptade(ToDo toDo, int id);
         void SetPercentComplete(int percentComplete, int id);

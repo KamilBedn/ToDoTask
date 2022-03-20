@@ -24,30 +24,30 @@ namespace ToDoTask.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ToDo>> GetAll()
         {
-            var toDo = _services.GetAll();
+            IEnumerable<ToDo> toDo = _services.GetAll();
             return Ok(toDo);
         }
 
         [HttpGet("{id}")]
         public ActionResult<ToDo> GetById([FromRoute]int id)
         {
-            var toDo = _services.GetById(id);
+            ToDo toDo = _services.GetById(id);
             if (toDo is null)
                 throw new NotFoundException("ToDo not found");
             return Ok(toDo);
         }
 
-        [HttpGet("incomingdays/{Days}")]
-        public ActionResult<IEnumerable<ToDo>> GetIncomingDays([FromRoute]int Days)
+        [HttpGet("incomingdays")]
+        public ActionResult<IEnumerable<ToDo>> GetIncomingDays([FromQuery]string query)
         {
-            var toDo = _services.GetIncomingDays(Days);
+            IEnumerable<ToDo> toDo = _services.GetIncomingDays(query);
             return Ok(toDo);
         }
 
         [HttpPost]
         public ActionResult CreatToDoTask([FromBody]ToDo toDo)
         {
-            var id = _services.CreateToDo(toDo);
+            int id = _services.CreateToDo(toDo);
             return Created($"todotask/{id}", null);
         }
 

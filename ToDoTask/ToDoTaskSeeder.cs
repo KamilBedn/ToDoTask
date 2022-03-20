@@ -35,7 +35,7 @@ namespace ToDoTask
             {
                 new ToDo()
                 {
-                    DateAndTimeOfExiry = DateTime.Parse("22.03.2022 16:00:00"),
+                    DateAndTimeOfExiry = new DateTime(2022,3,24,16,00,00),
                     Title = "Creat web appliction",
                     Description = "Application about book collection",
                     PercentComplete = 0,
@@ -43,7 +43,7 @@ namespace ToDoTask
                 },
                 new ToDo()
                 {
-                    DateAndTimeOfExiry = DateTime.Parse("25.03.2022 16:00:00"),
+                    DateAndTimeOfExiry = new DateTime(2022,3,22,14,30,00),
                     Title = "Test application",
                     Description = null,
                     PercentComplete = 0,
