@@ -7,7 +7,7 @@ using ToDoTask.Entities;
 
 namespace ToDoTask.Servies
 {
-    public interface IToDoServices
+    public interface IToDoTaskServices
     {
         ToDo GetById(int id);
         IEnumerable<ToDo> GetAll();

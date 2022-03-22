@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,9 +32,9 @@ namespace ToDoTask
         {
 
             services.AddControllers();
-            services.AddDbContext<ToDoTaskDbContext>();
+            services.AddDbContext<ToDoTaskDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ToDoTaskConnection")));
             services.AddScoped<ToDoTaskSeeder>();
-            services.AddScoped<IToDoServices, ToDoServices>();
+            services.AddScoped<IToDoTaskServices, ToDoTaskServices>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddSwaggerGen(c =>
             {

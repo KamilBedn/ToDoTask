@@ -14,13 +14,16 @@ namespace ToDoTask.Controllers
     [Route("todotask")]
     public class ToDoTaskController : ControllerBase
     {
-        private readonly IToDoServices _services;
-
-        public ToDoTaskController(IToDoServices services)
+        #region(property)
+        private readonly IToDoTaskServices _services;
+        #endregion
+        #region(constructor)
+        public ToDoTaskController(IToDoTaskServices services)
         {
             _services = services;
         }
-
+        #endregion
+        #region(action)
         [HttpGet]
         public ActionResult<IEnumerable<ToDo>> GetAll()
         {
@@ -78,5 +81,6 @@ namespace ToDoTask.Controllers
             _services.MarkDoneToDo(id);
             return Ok();    
         }
+        #endregion
     }
 }

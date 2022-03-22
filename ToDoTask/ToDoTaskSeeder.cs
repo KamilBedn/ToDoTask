@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,11 +21,14 @@ namespace ToDoTask
         {
             if(_context.Database.CanConnect())
             {
-                if(!_context.ToDos.Any())
+                if (_context.Database.IsRelational())
                 {
-                    var toDos = GetToDos();
-                    _context.ToDos.AddRange(toDos);
-                    _context.SaveChanges();
+                    if (!_context.ToDos.Any())
+                    {
+                        var toDos = GetToDos();
+                        _context.ToDos.AddRange(toDos);
+                        _context.SaveChanges();
+                    }
                 }
             }
         }

@@ -8,6 +8,10 @@ namespace ToDoTask.Entities
 {
     public class ToDoTaskDbContext : DbContext
     {
+        public ToDoTaskDbContext(DbContextOptions<ToDoTaskDbContext> options) : base(options)
+        {
+
+        }
         public DbSet<ToDo> ToDos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,9 +24,6 @@ namespace ToDoTask.Entities
                 .Property(t => t.Title)
                 .IsRequired();
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-             => optionsBuilder.UseNpgsql(@"Host=localhost;Username=postgres;Password=loleczek;Database=ToDoTaskDb");
 
     }
 }

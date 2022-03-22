@@ -9,18 +9,21 @@ using ToDoTask.Exeptions;
 
 namespace ToDoTask.Servies
 {
-    public class ToDoServices : IToDoServices
+    public class ToDoTaskServices : IToDoTaskServices
     {
+        #region(propety)
         private readonly ToDoTaskDbContext _context;
-        private readonly ILogger<ToDoServices> _logger;
+        private readonly ILogger<ToDoTaskServices> _logger;
         private string[] incomingToDo = new string[] {"today", "next day","current week"};
-
-        public ToDoServices(ToDoTaskDbContext context, ILogger<ToDoServices> logger)
+        #endregion
+        #region(constructor)
+        public ToDoTaskServices(ToDoTaskDbContext context, ILogger<ToDoTaskServices> logger)
         {
             _context = context;
             _logger = logger;
         }
-
+        #endregion
+        #region(get todo from database)
         private ToDo GetToDoTask(int id)
         {
             ToDo result = _context
@@ -28,7 +31,8 @@ namespace ToDoTask.Servies
                 .FirstOrDefault(t => t.Id == id);
             return result;
         }
-
+        #endregion
+        #region(action services)
         public ToDo GetById(int id)
         {
             ToDo toDo = GetToDoTask(id);
@@ -49,21 +53,21 @@ namespace ToDoTask.Servies
 
         public IEnumerable<ToDo> GetIncomingDays(string query)
         {
-            if(query.ToLower() == "today")
+            if(query.ToLower() == incomingToDo[0])
             {
                 IEnumerable<ToDo> result = _context.ToDos
                     .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(1))
                     .ToList();
                 return result;
             }
-            else if(query.ToLower() == "next day")
+            else if(query.ToLower() == incomingToDo[1])
             {
                 IEnumerable<ToDo> result = _context.ToDos
                     .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(2))
                     .ToList();
                 return result;
             }
-            else if(query.ToLower() == "current week")
+            else if(query.ToLower() == incomingToDo[2])
             {
                 IEnumerable<ToDo> result = _context.ToDos
                     .Where(d => d.DateAndTimeOfExiry < DateTime.Today.AddDays(7))
@@ -134,5 +138,6 @@ namespace ToDoTask.Servies
             toDo.IsDone = true;
             _context.SaveChanges();
         }
+        #endregion
     }
 }

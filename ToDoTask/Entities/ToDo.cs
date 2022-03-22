@@ -11,7 +11,7 @@ namespace ToDoTask.Entities
         public int Id { get; set; }
         public DateTime DateAndTimeOfExiry { get; set; }
         public string Title { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; }
         public int PercentComplete { get; set; }
         public bool IsDone { get; set; }
     }
